@@ -7,13 +7,13 @@ import (
 )
 
 type AirTicket struct {
-	From             string    `db:"from_country" json:"from"`
-	To               string    `db:"to_country" json:"to"`
-	Order            uuid.UUID `db:"order_id" json:"order_id"`
-	Carrier          string    `db:"carrier" json:"carrier"`
-	DepartureDate    time.Time `db:"departure_date" json:"departure_date"`
-	ArrivalDate      time.Time `db:"arrival_date" json:"arrival_date"`
-	RegistrationDate time.Time `db:"registration_date" json:"registration_date"`
+	From             string     `db:"from_country" json:"from"`
+	To               string     `db:"to_country" json:"to"`
+	Order            uuid.UUID  `db:"order_id" json:"order_id"`
+	Carrier          string     `db:"carrier" json:"carrier"`
+	DepartureDate    *time.Time `db:"departure_date" json:"departure_date"`
+	ArrivalDate      *time.Time `db:"arrival_date" json:"arrival_date"`
+	RegistrationDate *time.Time `db:"registration_date" json:"registration_date"`
 }
 
 type Passenger struct {

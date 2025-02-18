@@ -20,6 +20,7 @@ type Repository struct {
 type executor interface {
 	QueryContext(ctx context.Context, sql string, args ...any) (*sql.Rows, error)
 	SelectContext(ctx context.Context, dest interface{}, query string, args ...interface{}) error
+	GetContext(ctx context.Context, dest interface{}, query string, args ...interface{}) error
 }
 
 func NewConnection(driverName, DSN string) (*Repository, error) {

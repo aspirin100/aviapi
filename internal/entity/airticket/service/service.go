@@ -2,6 +2,7 @@ package service
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/google/uuid"
 
@@ -10,7 +11,7 @@ import (
 
 type TicketHandler interface {
 	GetTicketList(ctx context.Context) ([]entity.AirTicket, error)
-	EditTicket(order uuid.UUID, edited entity.AirTicket) error
+	EditTicket(ctx context.Context, order uuid.UUID, edited entity.AirTicket) (*entity.AirTicket, error)
 	RemoveTicketInfo(order uuid.UUID) error
 }
 
@@ -25,11 +26,16 @@ func New(ticketHandler TicketHandler) *AirticketService {
 }
 
 func (as *AirticketService) GetTicketList(ctx context.Context) ([]entity.AirTicket, error) {
-	return nil, nil
+	tickets, err := as.ticketHandler.GetTicketList(ctx)
+	if err != nil {
+		return nil, fmt.Errorf("failed to get ticket list: %w", err)
+	}
+
+	return tickets, nil
 }
 
-func (as *AirticketService) EditTicket(order uuid.UUID, edited entity.AirTicket) error {
-	return nil
+func (as *AirticketService) EditTicket(ctx context.Context, order uuid.UUID, edited entity.AirTicket) (*entity.AirTicket, error) {
+	return nil, nil
 }
 
 func (as *AirticketService) RemoveTicketInfo(order uuid.UUID) error {
