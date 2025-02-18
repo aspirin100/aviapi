@@ -29,7 +29,6 @@ type AirflightManager interface {
 	TicketManager
 	PassengerManager
 	DocumentManager
-	GetFullInfo(ticketOrderID uuid.UUID) (entity.FullInfo, error)
+	GetFullInfo(ticketOrderID uuid.UUID) (*entity.FullInfo, error)
 	GetReport(passengerID uuid.UUID, periodStart, periodEnd time.Time) ([]entity.AirTicket, error)
 }
-

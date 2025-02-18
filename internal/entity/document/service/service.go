@@ -21,3 +21,15 @@ func New(documentHandler DocumentHandler) *DocumentService {
 		documentHandler: documentHandler,
 	}
 }
+
+func (ds *DocumentService) GetDocumentList(passengerID uuid.UUID) ([]entity.Document, error) {
+	return nil, nil
+}
+
+func (ds *DocumentService) EditDocumentInfo(documentID uuid.UUID, edited entity.Document) error {
+	return nil
+}
+
+func (ds *DocumentService) RemoveDocumentInfo(documentID uuid.UUID) error {
+	return nil
+}

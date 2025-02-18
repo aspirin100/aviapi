@@ -20,3 +20,15 @@ func New(passengerHandler PassengerHandler) *PassengerService {
 		passengerHandler: passengerHandler,
 	}
 }
+
+func (ps *PassengerService) GitPassengerList(ticketOrderID uuid.UUID) ([]entity.Passenger, error) {
+	return nil, nil
+}
+
+func (ps *PassengerService) EditPassengerInfo(passengerID uuid.UUID, edited entity.Passenger) error {
+	return nil
+}
+
+func (ps *PassengerService) RemovePassengerInfo(passengerID uuid.UUID) error {
+	return nil
+}

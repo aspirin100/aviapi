@@ -21,3 +21,15 @@ func New(ticketHandler TicketHandler) *AirticketService {
 		ticketHandler: ticketHandler,
 	}
 }
+
+func (as *AirticketService) GetTicketList() ([]entity.AirTicket, error) {
+	return nil, nil
+}
+
+func (as *AirticketService) EditTicket(order uuid.UUID, edited entity.AirTicket) error {
+	return nil
+}
+
+func (as *AirticketService) RemoveTicketInfo(order uuid.UUID) error {
+	return nil
+}
