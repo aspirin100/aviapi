@@ -33,14 +33,14 @@ func (repo *Repository) GetDocumentList(ctx context.Context, passengerID uuid.UU
 
 func (repo *Repository) EditDocumentInfo(
 	ctx context.Context,
-	documentID uuid.UUID,
+	passengerID uuid.UUID,
 	edited entity.Document) (*entity.Document, error) {
 	ex := repo.CheckTx(ctx)
 
 	var finalDocument entity.Document
 
 	err := ex.GetContext(ctx, &finalDocument, EditDocumentInfoQuery,
-		documentID,
+		passengerID,
 		edited.Type,
 	)
 	if err != nil {
