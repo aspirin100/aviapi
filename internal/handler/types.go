@@ -21,8 +21,8 @@ type PassengerManager interface {
 }
 
 type DocumentManager interface {
-	GetDocumentList(passengerID uuid.UUID) ([]entity.Document, error)
-	EditDocumentInfo(documentID uuid.UUID, edited entity.Document) error
+	GetDocumentList(ctx context.Context, passengerID uuid.UUID) ([]entity.Document, error)
+	EditDocumentInfo(ctx context.Context, documentID uuid.UUID, edited entity.Document) (*entity.Document, error)
 	RemoveDocumentInfo(documentID uuid.UUID) error
 }
 

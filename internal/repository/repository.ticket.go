@@ -11,10 +11,6 @@ import (
 	"github.com/aspirin100/aviapi/internal/entity"
 )
 
-const (
-	AveragePassengerCount = 200
-)
-
 var (
 	ErrTicketNotFound = errors.New("ticket was not found")
 )
@@ -22,18 +18,14 @@ var (
 func (repo *Repository) GetTicketList(ctx context.Context) ([]entity.AirTicket, error) {
 	ex := repo.CheckTx(ctx)
 
-	tickets := make([]entity.AirTicket, 0, AveragePassengerCount)
+	tickets := []entity.AirTicket{}
 
 	err := ex.SelectContext(ctx, &tickets, GetTicketListQuery)
 	if err != nil {
 		return nil, fmt.Errorf("failed to get tickets list: %w", err)
 	}
 
-	//memory usage optimisation
-	finalList := make([]entity.AirTicket, len(tickets))
-	copy(finalList, tickets)
-
-	return finalList, nil
+	return tickets, nil
 }
 
 func (repo *Repository) EditTicket(
