@@ -1,4 +1,4 @@
-package repository
+package repository_test
 
 import (
 	"context"
@@ -9,6 +9,7 @@ import (
 	"github.com/stretchr/testify/require"
 
 	"github.com/aspirin100/aviapi/internal/entity"
+	"github.com/aspirin100/aviapi/internal/repository"
 )
 
 const (
@@ -25,7 +26,7 @@ var (
 )
 
 func TestGetTicketList(t *testing.T) {
-	repo, err := NewConnection("postgres", PostgresDSN)
+	repo, err := repository.NewConnection("postgres", PostgresDSN)
 	if err != nil {
 		fmt.Println(err)
 		t.Fail()
@@ -43,7 +44,7 @@ func TestGetTicketList(t *testing.T) {
 }
 
 func TestEditTicket(t *testing.T) {
-	repo, err := NewConnection("postgres", PostgresDSN)
+	repo, err := repository.NewConnection("postgres", PostgresDSN)
 	if err != nil {
 		fmt.Println(err)
 		t.Fail()
@@ -72,7 +73,7 @@ func TestEditTicket(t *testing.T) {
 		},
 		{
 			Name:        "ticket not found case",
-			ExpectedErr: ErrTicketNotFound,
+			ExpectedErr: repository.ErrTicketNotFound,
 			Args: Params{
 				orderID: uuid.Nil,
 				edited: entity.AirTicket{
@@ -93,7 +94,7 @@ func TestEditTicket(t *testing.T) {
 }
 
 func TestRemoveTicketInfo(t *testing.T) {
-	repo, err := NewConnection("postgres", PostgresDSN)
+	repo, err := repository.NewConnection("postgres", PostgresDSN)
 	if err != nil {
 		fmt.Println(err)
 		t.Fail()

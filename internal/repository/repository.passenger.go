@@ -39,7 +39,7 @@ func (repo *Repository) EditPassengerInfo(
 
 	var changedPassengerInfo entity.Passenger
 
-	err := ex.GetContext(ctx, &changedPassengerInfo, EditTicketQuery,
+	err := ex.GetContext(ctx, &changedPassengerInfo, EditPassengerInfoQuery,
 		passengerID,
 		edited.FirstName,
 		edited.LastName,
@@ -66,12 +66,7 @@ func (repo *Repository) RemovePassengerInfo(ctx context.Context, passengerID uui
 		RemovePassengerInfoQuery,
 		passengerID)
 	if err != nil {
-		switch {
-		case errors.Is(err, sql.ErrNoRows):
-			return ErrPassengerNotFound
-		default:
-			return fmt.Errorf("failed to remove passenger info: %w", err)
-		}
+		return fmt.Errorf("failed to remove passenger info: %w", err)
 	}
 
 	return nil

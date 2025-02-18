@@ -63,12 +63,7 @@ func (repo *Repository) RemoveDocumentInfo(ctx context.Context, documentID uuid.
 		RemoveDocumentInfoQuery,
 		documentID)
 	if err != nil {
-		switch {
-		case errors.Is(err, sql.ErrNoRows):
-			return ErrDocumentNotFound
-		default:
-			return fmt.Errorf("failed to remove document info: %w", err)
-		}
+		return fmt.Errorf("failed to remove document info: %w", err)
 	}
 
 	return nil

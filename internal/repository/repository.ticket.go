@@ -65,12 +65,7 @@ func (repo *Repository) RemoveTicketInfo(ctx context.Context, order uuid.UUID) e
 		RemoveTicketInfoQuery,
 		order)
 	if err != nil {
-		switch {
-		case errors.Is(err, sql.ErrNoRows):
-			return ErrTicketNotFound
-		default:
-			return fmt.Errorf("failed to remove ticket info: %w", err)
-		}
+		return fmt.Errorf("failed to remove ticket info: %w", err)
 	}
 
 	return nil
