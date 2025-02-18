@@ -2,6 +2,8 @@ package repository
 
 import (
 	"context"
+	"database/sql"
+	"errors"
 	"fmt"
 
 	"github.com/google/uuid"
@@ -11,6 +13,10 @@ import (
 
 const (
 	AveragePassengerCount = 200
+)
+
+var (
+	ErrTicketNotFound = errors.New("ticket was not found")
 )
 
 func (repo *Repository) GetTicketList(ctx context.Context) ([]entity.AirTicket, error) {
@@ -35,6 +41,7 @@ func (repo *Repository) EditTicket(
 	order uuid.UUID,
 	edited entity.AirTicket) (*entity.AirTicket, error) {
 	ex := repo.CheckTx(ctx)
+
 	var finalTicket entity.AirTicket
 
 	err := ex.GetContext(ctx, &finalTicket, EditTicketQuery,
@@ -53,7 +60,22 @@ func (repo *Repository) EditTicket(
 	return &finalTicket, nil
 }
 
-func (repo *Repository) RemoveTicketInfo(order uuid.UUID) error {
+func (repo *Repository) RemoveTicketInfo(ctx context.Context, order uuid.UUID) error {
+	ex := repo.CheckTx(ctx)
+
+	_, err := ex.QueryContext(
+		ctx,
+		RemoveTicketInfoQuery,
+		order)
+	if err != nil {
+		switch {
+		case errors.Is(err, sql.ErrNoRows):
+			return ErrTicketNotFound
+		default:
+			return fmt.Errorf("failed to remove ticket info: %w", err)
+		}
+	}
+
 	return nil
 }
 

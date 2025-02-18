@@ -12,7 +12,7 @@ import (
 type TicketHandler interface {
 	GetTicketList(ctx context.Context) ([]entity.AirTicket, error)
 	EditTicket(ctx context.Context, order uuid.UUID, edited entity.AirTicket) (*entity.AirTicket, error)
-	RemoveTicketInfo(order uuid.UUID) error
+	RemoveTicketInfo(ctx context.Context, order uuid.UUID) error
 }
 
 type AirticketService struct {
@@ -38,6 +38,6 @@ func (as *AirticketService) EditTicket(ctx context.Context, order uuid.UUID, edi
 	return nil, nil
 }
 
-func (as *AirticketService) RemoveTicketInfo(order uuid.UUID) error {
+func (as *AirticketService) RemoveTicketInfo(ctx context.Context, order uuid.UUID) error {
 	return nil
 }

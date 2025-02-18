@@ -5,19 +5,22 @@ import (
 	"fmt"
 	"testing"
 
-	"github.com/aspirin100/aviapi/internal/entity"
 	"github.com/google/uuid"
+	"github.com/stretchr/testify/require"
+
+	"github.com/aspirin100/aviapi/internal/entity"
 )
 
 const (
 	PostgresDSN = "postgres://postgres:postgres@localhost:5432/aviapi_db?sslmode=disable"
 )
 
+// only for test, changes with every migration
 var (
 	ticketIDs = []uuid.UUID{
-		uuid.MustParse("ffa6a9a4-6e0f-4bbb-81c6-e07f7eb2547b"),
-		uuid.MustParse("82a20871-3146-4d10-a8bd-5f0f30ca18d0"),
-		uuid.MustParse("8b8c1779-de07-43cb-85a9-613550971d45"),
+		uuid.MustParse("2eda32fd-0c41-4654-bb2e-5d45760e02a8"),
+		uuid.MustParse("62973252-1ad9-447e-ac7a-39a8daada566"),
+		uuid.MustParse("ac2057bc-8fdc-47ae-af72-fb36c65f7abf"),
 	}
 )
 
@@ -69,11 +72,45 @@ func TestEditTicket(t *testing.T) {
 		},
 	}
 
-	edited, err := repo.EditTicket(context.Background(), cases[0].Args.orderID, cases[0].Args.edited)
+	for _, tcase := range cases {
+		t.Run(tcase.Name, func(t *testing.T) {
+			_, err := repo.EditTicket(context.Background(), cases[0].Args.orderID, cases[0].Args.edited)
+
+			require.EqualValues(t, tcase.ExpectedErr, err)
+		})
+	}
+
+}
+
+func TestRemoveTicketInfo(t *testing.T) {
+	repo, err := NewConnection("postgres", PostgresDSN)
 	if err != nil {
 		fmt.Println(err)
 		t.Fail()
 	}
 
-	fmt.Println(edited)
+	cases := []struct {
+		Name        string
+		ExpectedErr error
+		OrderID     uuid.UUID
+	}{
+		{
+			Name:        "ok case",
+			ExpectedErr: nil,
+			OrderID:     ticketIDs[0],
+		},
+		{
+			Name:        "ticket not found case",
+			ExpectedErr: nil,
+			OrderID:     uuid.Nil,
+		},
+	}
+
+	for _, tcase := range cases {
+		t.Run(tcase.Name, func(t *testing.T) {
+			err := repo.RemoveTicketInfo(context.Background(), tcase.OrderID)
+
+			require.EqualValues(t, tcase.ExpectedErr, err)
+		})
+	}
 }

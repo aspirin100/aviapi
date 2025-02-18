@@ -11,7 +11,7 @@ import (
 type TicketManager interface {
 	GetTicketList(ctx context.Context) ([]entity.AirTicket, error)
 	EditTicket(ctx context.Context, order uuid.UUID, edited entity.AirTicket) (*entity.AirTicket, error)
-	RemoveTicketInfo(order uuid.UUID) error
+	RemoveTicketInfo(ctx context.Context, order uuid.UUID) error
 }
 
 type PassengerManager interface {
