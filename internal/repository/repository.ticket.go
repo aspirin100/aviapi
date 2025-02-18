@@ -46,7 +46,12 @@ func (repo *Repository) EditTicket(
 		edited.RegistrationDate,
 	)
 	if err != nil {
-		return nil, fmt.Errorf("failed to edit ticket: %w", err)
+		switch {
+		case errors.Is(err, sql.ErrNoRows):
+			return nil, ErrTicketNotFound
+		default:
+			return nil, fmt.Errorf("failed to remove ticket info: %w", err)
+		}
 	}
 
 	return &finalTicket, nil

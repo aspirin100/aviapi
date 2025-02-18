@@ -11,7 +11,7 @@ import (
 type DocumentHandler interface {
 	GetDocumentList(ctx context.Context, passengerID uuid.UUID) ([]entity.Document, error)
 	EditDocumentInfo(ctx context.Context, documentID uuid.UUID, edited entity.Document) (*entity.Document, error)
-	RemoveDocumentInfo(documentID uuid.UUID) error
+	RemoveDocumentInfo(ctx context.Context, documentID uuid.UUID) error
 }
 
 type DocumentService struct {
@@ -32,6 +32,6 @@ func (ds *DocumentService) EditDocumentInfo(ctx context.Context, documentID uuid
 	return nil, nil
 }
 
-func (ds *DocumentService) RemoveDocumentInfo(documentID uuid.UUID) error {
+func (ds *DocumentService) RemoveDocumentInfo(ctx context.Context, documentID uuid.UUID) error {
 	return nil
 }

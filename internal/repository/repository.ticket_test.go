@@ -70,16 +70,26 @@ func TestEditTicket(t *testing.T) {
 				},
 			},
 		},
+		{
+			Name:        "ticket not found case",
+			ExpectedErr: ErrTicketNotFound,
+			Args: Params{
+				orderID: uuid.Nil,
+				edited: entity.AirTicket{
+					From: "EDITED",
+					To:   "EDITED",
+				},
+			},
+		},
 	}
 
 	for _, tcase := range cases {
 		t.Run(tcase.Name, func(t *testing.T) {
-			_, err := repo.EditTicket(context.Background(), cases[0].Args.orderID, cases[0].Args.edited)
+			_, err := repo.EditTicket(context.Background(), tcase.Args.orderID, tcase.Args.edited)
 
 			require.EqualValues(t, tcase.ExpectedErr, err)
 		})
 	}
-
 }
 
 func TestRemoveTicketInfo(t *testing.T) {
