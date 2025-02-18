@@ -1,13 +1,15 @@
 package service
 
 import (
+	"context"
+
 	"github.com/google/uuid"
 
 	"github.com/aspirin100/aviapi/internal/entity"
 )
 
 type TicketHandler interface {
-	GetTicketList() ([]entity.AirTicket, error)
+	GetTicketList(ctx context.Context) ([]entity.AirTicket, error)
 	EditTicket(order uuid.UUID, edited entity.AirTicket) error
 	RemoveTicketInfo(order uuid.UUID) error
 }
@@ -22,7 +24,7 @@ func New(ticketHandler TicketHandler) *AirticketService {
 	}
 }
 
-func (as *AirticketService) GetTicketList() ([]entity.AirTicket, error) {
+func (as *AirticketService) GetTicketList(ctx context.Context) ([]entity.AirTicket, error) {
 	return nil, nil
 }
 

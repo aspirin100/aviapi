@@ -1,6 +1,7 @@
 package handler
 
 import (
+	"context"
 	"time"
 
 	"github.com/aspirin100/aviapi/internal/entity"
@@ -8,13 +9,13 @@ import (
 )
 
 type TicketManager interface {
-	GetTicketList() ([]entity.AirTicket, error)
+	GetTicketList(ctx context.Context) ([]entity.AirTicket, error)
 	EditTicket(order uuid.UUID, edited entity.AirTicket) error
 	RemoveTicketInfo(order uuid.UUID) error
 }
 
 type PassengerManager interface {
-	GitPassengerList(ticketOrderID uuid.UUID) ([]entity.Passenger, error)
+	GetPassengerList(ticketOrderID uuid.UUID) ([]entity.Passenger, error)
 	EditPassengerInfo(passengerID uuid.UUID, edited entity.Passenger) error
 	RemovePassengerInfo(passengerID uuid.UUID) error
 }

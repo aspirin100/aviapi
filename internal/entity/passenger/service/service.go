@@ -6,7 +6,7 @@ import (
 )
 
 type PassengerHandler interface {
-	GitPassengerList(ticketOrderID uuid.UUID) ([]entity.Passenger, error)
+	GetPassengerList(ticketOrderID uuid.UUID) ([]entity.Passenger, error)
 	EditPassengerInfo(passengerID uuid.UUID, edited entity.Passenger) error
 	RemovePassengerInfo(passengerID uuid.UUID) error
 }
@@ -21,7 +21,7 @@ func New(passengerHandler PassengerHandler) *PassengerService {
 	}
 }
 
-func (ps *PassengerService) GitPassengerList(ticketOrderID uuid.UUID) ([]entity.Passenger, error) {
+func (ps *PassengerService) GetPassengerList(ticketOrderID uuid.UUID) ([]entity.Passenger, error) {
 	return nil, nil
 }
 

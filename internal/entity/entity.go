@@ -7,8 +7,8 @@ import (
 )
 
 type AirTicket struct {
-	From             string    `db:"from" json:"from"`
-	To               string    `db:"to" json:"to"`
+	From             string    `db:"from_country" json:"from"`
+	To               string    `db:"to_country" json:"to"`
 	Order            uuid.UUID `db:"order_id" json:"order_id"`
 	Carrier          string    `db:"carrier" json:"carrier"`
 	DepartureDate    time.Time `db:"departure_date" json:"departure_date"`

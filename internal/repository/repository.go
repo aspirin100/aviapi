@@ -1,6 +1,9 @@
 package repository
 
 import (
+	"context"
+	"database/sql"
+	"errors"
 	"fmt"
 	"time"
 
@@ -14,6 +17,11 @@ type Repository struct {
 	DB *sqlx.DB
 }
 
+type executor interface {
+	QueryContext(ctx context.Context, sql string, args ...any) (*sql.Rows, error)
+	SelectContext(ctx context.Context, dest interface{}, query string, args ...interface{}) error
+}
+
 func NewConnection(driverName, DSN string) (*Repository, error) {
 	db, err := sqlx.Connect(driverName, DSN)
 	if err != nil {
@@ -23,6 +31,50 @@ func NewConnection(driverName, DSN string) (*Repository, error) {
 	return &Repository{
 		DB: db,
 	}, nil
+}
+
+type ctxKey struct{}
+type CommitOrRollback func(err error) error
+
+var txContextKey = ctxKey{}
+
+func (r *Repository) BeginTx(ctx context.Context) (context.Context, CommitOrRollback, error) {
+	tx, err := r.DB.BeginTxx(ctx, &sql.TxOptions{
+		Isolation: sql.LevelReadCommitted,
+	})
+	if err != nil {
+		return nil, nil, fmt.Errorf("failed to start transaction: %w", err)
+	}
+
+	return context.WithValue(ctx, txContextKey, tx), func(err error) error {
+		if err != nil {
+			errRollback := tx.Rollback()
+			if errRollback != nil {
+				return errors.Join(err, errRollback)
+			}
+
+			return err
+		}
+
+		errCommit := tx.Commit()
+		if errCommit != nil {
+			return fmt.Errorf("failed to commit transaction: %w", errCommit)
+		}
+
+		return nil
+	}, nil
+}
+
+func (r *Repository) CheckTx(ctx context.Context) executor {
+	var ex executor = r.DB
+
+	// checks if current operation is in transaction
+	tx, ok := ctx.Value(txContextKey).(sqlx.Tx)
+	if ok {
+		ex = &tx
+	}
+
+	return ex
 }
 
 func (repo *Repository) GetFullInfo(ticketOrderID uuid.UUID) (*entity.FullInfo, error) {

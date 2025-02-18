@@ -5,7 +5,7 @@ import (
 	"github.com/google/uuid"
 )
 
-func (repo *Repository) GitPassengerList(ticketOrderID uuid.UUID) ([]entity.Passenger, error) {
+func (repo *Repository) GetPassengerList(ticketOrderID uuid.UUID) ([]entity.Passenger, error) {
 	return nil, nil
 }
 
