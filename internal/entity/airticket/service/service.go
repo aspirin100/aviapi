@@ -7,9 +7,9 @@ import (
 )
 
 type TicketHandler interface {
-	GetAll() ([]entity.AirTicket, error)
-	Edit(order uuid.UUID, edited entity.AirTicket) error
-	Remove(order uuid.UUID) error
+	GetTicketList() ([]entity.AirTicket, error)
+	EditTicket(order uuid.UUID, edited entity.AirTicket) error
+	RemoveTicketInfo(order uuid.UUID) error
 }
 
 type AirticketService struct {
