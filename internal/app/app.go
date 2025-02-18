@@ -37,7 +37,7 @@ func New(cfg config.Config) (*App, error) {
 	// service layer constructor
 	mng := initManager(repo)
 
-	serverHandler := handler.New(mng)
+	serverHandler := handler.New(mng, cfg)
 
 	return &App{
 		serverHandler: serverHandler,

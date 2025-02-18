@@ -1,11 +1,44 @@
 package handler
 
+import (
+	"context"
+	"fmt"
+	"net/http"
+
+	"github.com/aspirin100/aviapi/internal/config"
+)
+
 type Handler struct {
-	AirflightManager
+	airflightManager AirflightManager
+	server           *http.Server
 }
 
-func New(manager AirflightManager) *Handler {
+func New(airflightManager AirflightManager, cfg config.Config) *Handler {
 	return &Handler{
-		AirflightManager: manager,
+		airflightManager: airflightManager,
+		server: &http.Server{
+			Addr:         cfg.Hostname + ":" + cfg.Port,
+			ReadTimeout:  cfg.ReadTimeout,
+			WriteTimeout: cfg.WriteTimeout,
+			IdleTimeout:  cfg.IdleTimeout,
+		},
 	}
+}
+
+func (h *Handler) Start() error {
+	err := h.server.ListenAndServe()
+	if err != nil {
+		return fmt.Errorf("failed to start http server: %w", err)
+	}
+
+	return nil
+}
+
+func (h *Handler) Shutdown(ctx context.Context) error {
+	err := h.server.Shutdown(ctx)
+	if err != nil {
+		return fmt.Errorf("failed to stop http server: %w", err)
+	}
+
+	return nil
 }
