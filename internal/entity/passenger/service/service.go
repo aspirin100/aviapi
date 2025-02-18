@@ -10,7 +10,7 @@ import (
 type PassengerHandler interface {
 	GetPassengerList(ctx context.Context, ticketOrderID uuid.UUID) ([]entity.Passenger, error)
 	EditPassengerInfo(ctx context.Context, passengerID uuid.UUID, edited entity.Passenger) (*entity.Passenger, error)
-	RemovePassengerInfo(passengerID uuid.UUID) error
+	RemovePassengerInfo(ctx context.Context, passengerID uuid.UUID) error
 }
 
 type PassengerService struct {
@@ -28,9 +28,9 @@ func (ps *PassengerService) GetPassengerList(ctx context.Context, ticketOrderID 
 }
 
 func (ps *PassengerService) EditPassengerInfo(ctx context.Context, passengerID uuid.UUID, edited entity.Passenger) (*entity.Passenger, error) {
-	return nil
+	return nil, nil
 }
 
-func (ps *PassengerService) RemovePassengerInfo(passengerID uuid.UUID) error {
+func (ps *PassengerService) RemovePassengerInfo(ctx context.Context, passengerID uuid.UUID) error {
 	return nil
 }

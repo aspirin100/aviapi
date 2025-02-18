@@ -17,7 +17,7 @@ type TicketManager interface {
 type PassengerManager interface {
 	GetPassengerList(ctx context.Context, ticketOrderID uuid.UUID) ([]entity.Passenger, error)
 	EditPassengerInfo(ctx context.Context, passengerID uuid.UUID, edited entity.Passenger) (*entity.Passenger, error)
-	RemovePassengerInfo(passengerID uuid.UUID) error
+	RemovePassengerInfo(ctx context.Context, passengerID uuid.UUID) error
 }
 
 type DocumentManager interface {

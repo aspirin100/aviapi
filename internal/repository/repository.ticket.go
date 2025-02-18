@@ -34,9 +34,9 @@ func (repo *Repository) EditTicket(
 	edited entity.AirTicket) (*entity.AirTicket, error) {
 	ex := repo.CheckTx(ctx)
 
-	var finalTicket entity.AirTicket
+	var changedTicket entity.AirTicket
 
-	err := ex.GetContext(ctx, &finalTicket, EditTicketQuery,
+	err := ex.GetContext(ctx, &changedTicket, EditTicketQuery,
 		order,
 		edited.From,
 		edited.To,
@@ -50,11 +50,11 @@ func (repo *Repository) EditTicket(
 		case errors.Is(err, sql.ErrNoRows):
 			return nil, ErrTicketNotFound
 		default:
-			return nil, fmt.Errorf("failed to remove ticket info: %w", err)
+			return nil, fmt.Errorf("failed to edit info: %w", err)
 		}
 	}
 
-	return &finalTicket, nil
+	return &changedTicket, nil
 }
 
 func (repo *Repository) RemoveTicketInfo(ctx context.Context, order uuid.UUID) error {

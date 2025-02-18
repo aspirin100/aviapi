@@ -25,7 +25,7 @@ func (repo *Repository) GetDocumentList(ctx context.Context, passengerID uuid.UU
 		GetDocumentListQuery,
 		passengerID)
 	if err != nil {
-		return nil, fmt.Errorf("failed to get tickets list: %w", err)
+		return nil, fmt.Errorf("failed to get document list: %w", err)
 	}
 
 	return documents, nil
@@ -37,9 +37,9 @@ func (repo *Repository) EditDocumentInfo(
 	edited entity.Document) (*entity.Document, error) {
 	ex := repo.CheckTx(ctx)
 
-	var finalDocument entity.Document
+	var changedDocument entity.Document
 
-	err := ex.GetContext(ctx, &finalDocument, EditDocumentInfoQuery,
+	err := ex.GetContext(ctx, &changedDocument, EditDocumentInfoQuery,
 		passengerID,
 		edited.Type,
 	)
@@ -52,7 +52,7 @@ func (repo *Repository) EditDocumentInfo(
 		}
 	}
 
-	return &finalDocument, nil
+	return &changedDocument, nil
 }
 
 func (repo *Repository) RemoveDocumentInfo(ctx context.Context, documentID uuid.UUID) error {
@@ -67,7 +67,7 @@ func (repo *Repository) RemoveDocumentInfo(ctx context.Context, documentID uuid.
 		case errors.Is(err, sql.ErrNoRows):
 			return ErrDocumentNotFound
 		default:
-			return fmt.Errorf("failed to remove ticket info: %w", err)
+			return fmt.Errorf("failed to remove document info: %w", err)
 		}
 	}
 
