@@ -4,3 +4,8 @@ POSTGRES_DSN := "postgres://postgres:postgres@localhost:5432/finapi?sslmode=disa
 run:
 	go run ./cmd/aviapi/main.go
 
+DEFAULT-GOAL: run
+
+.PHONY: up
+up: 
+	docker-compose up -d

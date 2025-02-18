@@ -1,7 +1,9 @@
 package app
 
 import (
+	"context"
 	"fmt"
+	"log"
 
 	"github.com/aspirin100/aviapi/internal/config"
 	ticketservice "github.com/aspirin100/aviapi/internal/entity/airticket/service"
@@ -25,9 +27,10 @@ type manager struct {
 
 type App struct {
 	serverHandler *handler.Handler
+	repo          *repository.Repository
 }
 
-func New(cfg config.Config) (*App, error) {
+func New(cfg *config.Config) (*App, error) {
 	// repository constructor
 	repo, err := repository.NewConnection(databaseDriverName, cfg.DatabaseDSN)
 	if err != nil {
@@ -41,7 +44,33 @@ func New(cfg config.Config) (*App, error) {
 
 	return &App{
 		serverHandler: serverHandler,
+		repo:          repo,
 	}, nil
+}
+
+func (app *App) Run() error {
+	err := app.serverHandler.Start()
+	if err != nil {
+		return fmt.Errorf("failed to run application: %w", err)
+	}
+
+	log.Println("started")
+
+	return nil
+}
+
+func (app *App) Stop(ctx context.Context) error {
+	err := app.serverHandler.Shutdown(ctx)
+	if err != nil {
+		return fmt.Errorf("failed to stop application: %w", err)
+	}
+
+	err = app.repo.DB.Close()
+	if err != nil {
+		return fmt.Errorf("failed to stop application: %w", err)
+	}
+
+	return nil
 }
 
 func initManager(repo *repository.Repository) *manager {

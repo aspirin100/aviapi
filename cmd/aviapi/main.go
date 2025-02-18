@@ -1,10 +1,20 @@
 package main
 
 import (
+	"context"
 	"fmt"
 	"log"
+	"os"
+	"os/signal"
+	"syscall"
+	"time"
 
+	"github.com/aspirin100/aviapi/internal/app"
 	"github.com/aspirin100/aviapi/internal/config"
+)
+
+const (
+	shutdownTimeout = time.Second * 5
 )
 
 func main() {
@@ -16,25 +26,30 @@ func main() {
 
 	fmt.Println("current config:", cfg)
 
-	// application, err := app.New(context.Background(), cfg)
-	// if err != nil {
-	// 	log.Fatal(err)
-	// }
+	application, err := app.New(cfg)
+	if err != nil {
+		log.Fatal(err)
+	}
 
-	// err = application.Run()
-	// if err != nil {
-	// 	log.Fatal(err)
-	// }
+	stopCtx, cancel := context.WithTimeout(context.Background(), shutdownTimeout)
+	defer cancel()
 
-	// stop := make(chan os.Signal, 1)
-	// signal.Notify(stop, syscall.SIGTERM, syscall.SIGINT)
+	go func() {
+		err = application.Run()
+		if err != nil {
+			log.Fatal(err)
+		}
+	}()
 
-	// <-stop
+	stop := make(chan os.Signal, 1)
+	signal.Notify(stop, syscall.SIGTERM, syscall.SIGINT)
 
-	// err = application.Stop(context.Background())
-	// if err != nil {
-	// 	log.Fatal(err)
-	// }
+	<-stop
 
-	// log.Println("server correctly stopped")
+	err = application.Stop(stopCtx)
+	if err != nil {
+		log.Println(err)
+	}
+
+	fmt.Println("correctly stopped")
 }

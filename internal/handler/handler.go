@@ -13,7 +13,7 @@ type Handler struct {
 	server           *http.Server
 }
 
-func New(airflightManager AirflightManager, cfg config.Config) *Handler {
+func New(airflightManager AirflightManager, cfg *config.Config) *Handler {
 	return &Handler{
 		airflightManager: airflightManager,
 		server: &http.Server{
@@ -27,7 +27,7 @@ func New(airflightManager AirflightManager, cfg config.Config) *Handler {
 
 func (h *Handler) Start() error {
 	err := h.server.ListenAndServe()
-	if err != nil {
+	if err != http.ErrServerClosed {
 		return fmt.Errorf("failed to start http server: %w", err)
 	}
 
