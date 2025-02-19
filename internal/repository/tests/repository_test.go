@@ -23,7 +23,7 @@ func TestGetFullInfo(t *testing.T) {
 		t.Fail()
 	}
 
-	fmt.Println(fullinfo)
+	fmt.Println(fullinfo.Passengers[0].Documents[0].ID)
 }
 
 func TestGetPassengerReport(t *testing.T) {

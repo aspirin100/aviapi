@@ -19,8 +19,7 @@ const (
 // only for test, changes with every migration.
 var (
 	TicketIDs = []uuid.UUID{
-		uuid.MustParse("657bdd55-4045-499c-af5a-a2d749114cf7"),
-		uuid.MustParse("199664ae-4370-45e8-b399-b3aadf7ac5df"),
+		uuid.MustParse("af4ca61e-9810-48f6-aceb-7733713ca7c9"),
 	}
 )
 
