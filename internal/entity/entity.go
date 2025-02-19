@@ -56,10 +56,10 @@ type FullInfo struct {
 }
 
 type Report struct {
-	RegistrationDate time.Time  `db:"registration_date"`
-	DepartureDate    *time.Time `db:"departure_date"`
-	OrderID          uuid.UUID  `db:"order_id"`
-	FromCountry      string     `db:"from_country"`
-	ToCountry        string     `db:"to_country"`
-	ServiceProvided  bool       `db:"service_provided"`
+	RegistrationDate time.Time  `db:"registration_date" json:"registration_date"`
+	DepartureDate    *time.Time `db:"departure_date" json:"departure_date"`
+	OrderID          uuid.UUID  `db:"order_id" json:"order_id"`
+	FromCountry      string     `db:"from_country" json:"from"`
+	ToCountry        string     `db:"to_country" json:"to"`
+	ServiceProvided  bool       `db:"service_provided" json:"provided"`
 }
