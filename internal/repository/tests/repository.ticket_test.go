@@ -43,7 +43,7 @@ func TestGetTicketList(t *testing.T) {
 	}
 }
 
-func TestEditTicket(t *testing.T) {
+func TestEditTicketInfo(t *testing.T) {
 	repo, err := repository.NewConnection("postgres", PostgresDSN)
 	if err != nil {
 		fmt.Println(err)
@@ -86,7 +86,7 @@ func TestEditTicket(t *testing.T) {
 
 	for _, tcase := range cases {
 		t.Run(tcase.Name, func(t *testing.T) {
-			_, err := repo.EditTicket(context.Background(), tcase.Args.orderID, tcase.Args.edited)
+			_, err := repo.EditTicketInfo(context.Background(), tcase.Args.orderID, tcase.Args.edited)
 
 			require.EqualValues(t, tcase.ExpectedErr, err)
 		})

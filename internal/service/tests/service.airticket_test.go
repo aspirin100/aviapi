@@ -33,7 +33,7 @@ func initAirticetService() (*service.AirticketService, error) {
 	return service.NewAirticketService(repo), nil
 }
 
-func TestEditTicketInfo(t *testing.T) {
+func TestEditTicketInfoInfo(t *testing.T) {
 	srv, err := initAirticetService()
 	if err != nil {
 		fmt.Println(err)
@@ -74,7 +74,7 @@ func TestEditTicketInfo(t *testing.T) {
 
 	for _, tcase := range cases {
 		t.Run(tcase.Name, func(t *testing.T) {
-			_, err := srv.EditTicket(
+			_, err := srv.EditTicketInfo(
 				context.Background(),
 				tcase.Args.orderId,
 				tcase.Args.edited)

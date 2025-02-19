@@ -12,7 +12,7 @@ import (
 
 type TicketHandler interface {
 	GetTicketList(ctx context.Context) ([]entity.AirTicket, error)
-	EditTicket(ctx context.Context, order uuid.UUID, edited entity.AirTicket) (*entity.AirTicket, error)
+	EditTicketInfo(ctx context.Context, order uuid.UUID, edited entity.AirTicket) (*entity.AirTicket, error)
 	RemoveTicketInfo(ctx context.Context, order uuid.UUID) error
 	BeginTx(ctx context.Context) (context.Context, entity.CommitOrRollback, error)
 }
@@ -50,7 +50,7 @@ func (as *AirticketService) GetTicketList(ctx context.Context) ([]entity.AirTick
 	return tickets, nil
 }
 
-func (as *AirticketService) EditTicket(
+func (as *AirticketService) EditTicketInfo(
 	ctx context.Context,
 	order uuid.UUID,
 	edited entity.AirTicket) (*entity.AirTicket, error) {
@@ -66,7 +66,7 @@ func (as *AirticketService) EditTicket(
 		}
 	}(err)
 
-	changedTicketInfo, err := as.ticketHandler.EditTicket(ctx, order, edited)
+	changedTicketInfo, err := as.ticketHandler.EditTicketInfo(ctx, order, edited)
 	if err != nil {
 		switch {
 		case errors.Is(err, entity.ErrTicketNotFound):

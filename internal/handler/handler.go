@@ -6,6 +6,7 @@ import (
 	"net/http"
 
 	"github.com/aspirin100/aviapi/internal/config"
+	"github.com/gin-gonic/gin"
 )
 
 type Handler struct {
@@ -14,15 +15,24 @@ type Handler struct {
 }
 
 func New(airflightManager AirflightManager, cfg *config.Config) *Handler {
-	return &Handler{
+	serverHandler := &Handler{
 		airflightManager: airflightManager,
-		server: &http.Server{
-			Addr:         cfg.Hostname + ":" + cfg.Port,
-			ReadTimeout:  cfg.ReadTimeout,
-			WriteTimeout: cfg.WriteTimeout,
-			IdleTimeout:  cfg.IdleTimeout,
-		},
 	}
+
+	router := gin.Default()
+
+	_ = router.GET("/airticket", serverHandler.GetTicketList)
+	_ = router.PATCH("/airticket/:order_id", serverHandler.EditTicketInfo)
+
+	serverHandler.server = &http.Server{
+		Addr:         cfg.Hostname + ":" + cfg.Port,
+		ReadTimeout:  cfg.ReadTimeout,
+		WriteTimeout: cfg.WriteTimeout,
+		IdleTimeout:  cfg.IdleTimeout,
+		Handler:      router,
+	}
+
+	return serverHandler
 }
 
 func (h *Handler) Start() error {

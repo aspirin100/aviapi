@@ -24,7 +24,7 @@ func (repo *Repository) GetTicketList(ctx context.Context) ([]entity.AirTicket, 
 	return tickets, nil
 }
 
-func (repo *Repository) EditTicket(
+func (repo *Repository) EditTicketInfo(
 	ctx context.Context,
 	order uuid.UUID,
 	edited entity.AirTicket) (*entity.AirTicket, error) {
@@ -32,7 +32,7 @@ func (repo *Repository) EditTicket(
 
 	var changedTicket entity.AirTicket
 
-	err := ex.GetContext(ctx, &changedTicket, EditTicketQuery,
+	err := ex.GetContext(ctx, &changedTicket, EditTicketInfoQuery,
 		order,
 		edited.From,
 		edited.To,
@@ -80,7 +80,7 @@ const (
 	FROM tickets;
 	`
 
-	EditTicketQuery = `
+	EditTicketInfoQuery = `
     UPDATE tickets SET
         from_country = CASE WHEN $2 = '' THEN from_country ELSE $2 END,
         to_country = CASE WHEN $3 = '' THEN to_country ELSE $3 END,
