@@ -8,6 +8,18 @@ make build-img
 ```shell
 make up
 ```
+3. 
+```shell
+make goose-up # Для поднятия миграций
+```
+
+Дополнительно:
+```shell
+make goose-down # Для отката последней миграции
+
+# Создает миграцию в папке ./internal/repository/migrations/
+make goose-create MIGRATION_NAME=name 
+```
 
 ### Allowed methods and paths
 ```shell
