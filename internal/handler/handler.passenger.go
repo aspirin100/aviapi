@@ -65,7 +65,25 @@ func (h *Handler) EditPassengerInfo(ctx *gin.Context) {
 }
 
 func (h *Handler) RemovePassengerInfo(ctx *gin.Context) {
+	parsedID, err := uuid.Parse(ctx.Param("passenger_id"))
+	if err != nil {
+		fmt.Println(err)
 
+		ctx.Status(http.StatusBadRequest)
+
+		return
+	}
+
+	err = h.airflightManager.RemovePassengerInfo(ctx, parsedID)
+	if err != nil {
+		fmt.Println(err)
+
+		ctx.Status(http.StatusInternalServerError)
+
+		return
+	}
+
+	ctx.Status(http.StatusOK)
 }
 
 func validateEditPassengerRequest(ctx *gin.Context) (*uuid.UUID, *entity.Passenger, error) {
