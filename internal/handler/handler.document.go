@@ -66,7 +66,25 @@ func (h *Handler) EditDocumentInfo(ctx *gin.Context) {
 }
 
 func (h *Handler) RemoveDocumentInfo(ctx *gin.Context) {
+	parsedID, err := uuid.Parse(ctx.Param("document_id"))
+	if err != nil {
+		fmt.Println(err)
 
+		ctx.Status(http.StatusBadRequest)
+
+		return
+	}
+
+	err = h.airflightManager.RemoveDocumentInfo(ctx, parsedID)
+	if err != nil {
+		fmt.Println(err)
+
+		ctx.Status(http.StatusInternalServerError)
+
+		return
+	}
+
+	ctx.Status(http.StatusOK)
 }
 
 func validateEditDocumentRequest(ctx *gin.Context) (*uuid.UUID, *entity.Document, error) {

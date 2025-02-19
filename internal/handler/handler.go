@@ -27,6 +27,7 @@ func New(airflightManager AirflightManager, cfg *config.Config) *Handler {
 
 	_ = router.GET("/:passenger_id/documents", serverHandler.GetDocumentList)
 	_ = router.PATCH("/documents/:document_id", serverHandler.EditDocumentInfo)
+	_ = router.DELETE("/documents/:document_id", serverHandler.RemoveDocumentInfo)
 
 	serverHandler.server = &http.Server{
 		Addr:         cfg.Hostname + ":" + cfg.Port,
