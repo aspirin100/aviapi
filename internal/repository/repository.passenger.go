@@ -73,7 +73,7 @@ const (
 	SELECT
 		first_name,
 		last_name,
-		patronymic
+		COALESCE(patronymic, '') AS patronymic
 	FROM ticket_passengers
 	JOIN passengers
 	ON passengers.id = ticket_passengers.passenger_id
@@ -90,7 +90,7 @@ const (
 	RETURNING 
 		first_name,
 		last_name,
-		patronymic;
+		COALESCE(patronymic, '') AS patronymic;
 	`
 
 	RemovePassengerInfoQuery = `
