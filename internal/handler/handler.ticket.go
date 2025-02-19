@@ -80,7 +80,7 @@ func validateEditTicketRequest(ctx *gin.Context) (*uuid.UUID, *entity.AirTicket,
 
 	parsedID, err := uuid.Parse(order_id)
 	if err != nil {
-		return nil, nil, fmt.Errorf("failed to parse order_id: %w", err)
+		return nil, nil, fmt.Errorf("failed to parse order id: %w", err)
 	}
 
 	var editedTicket entity.AirTicket
