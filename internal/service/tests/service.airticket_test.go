@@ -62,7 +62,7 @@ func TestEditTicketInfo(t *testing.T) {
 		},
 		{
 			Name:        "not found case",
-			ExpectedErr: service.ErrTicketNotFound,
+			ExpectedErr: entity.ErrTicketNotFound,
 			Args: Params{
 				orderId: uuid.Nil,
 				edited: entity.AirTicket{
@@ -78,7 +78,7 @@ func TestEditTicketInfo(t *testing.T) {
 				context.Background(),
 				tcase.Args.orderId,
 				tcase.Args.edited)
-			
+
 			require.EqualValues(t, tcase.ExpectedErr, err)
 		})
 	}

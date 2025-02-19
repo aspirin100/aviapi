@@ -7,10 +7,11 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/aspirin100/aviapi/internal/entity"
 	"github.com/google/uuid"
 	"github.com/jmoiron/sqlx"
 	_ "github.com/lib/pq"
+
+	"github.com/aspirin100/aviapi/internal/entity"
 )
 
 type Repository struct {
@@ -35,11 +36,10 @@ func NewConnection(driverName, DSN string) (*Repository, error) {
 }
 
 type ctxKey struct{}
-type CommitOrRollback func(err error) error
 
 var txContextKey = ctxKey{}
 
-func (r *Repository) BeginTx(ctx context.Context) (context.Context, CommitOrRollback, error) {
+func (r *Repository) BeginTx(ctx context.Context) (context.Context, entity.CommitOrRollback, error) {
 	tx, err := r.DB.BeginTxx(ctx, &sql.TxOptions{
 		Isolation: sql.LevelReadCommitted,
 	})

@@ -1,9 +1,18 @@
 package entity
 
 import (
+	"errors"
 	"time"
 
 	"github.com/google/uuid"
+)
+
+type CommitOrRollback func(err error) error
+
+var (
+	ErrDocumentNotFound = errors.New("document not found")
+	ErrTicketNotFound = errors.New("ticket not found")
+	ErrPassengerNotFound = errors.New("passenger not found")
 )
 
 type AirTicket struct {

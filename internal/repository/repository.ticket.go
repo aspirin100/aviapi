@@ -11,10 +11,6 @@ import (
 	"github.com/aspirin100/aviapi/internal/entity"
 )
 
-var (
-	ErrTicketNotFound = errors.New("ticket was not found")
-)
-
 func (repo *Repository) GetTicketList(ctx context.Context) ([]entity.AirTicket, error) {
 	ex := repo.CheckTx(ctx)
 
@@ -48,7 +44,7 @@ func (repo *Repository) EditTicket(
 	if err != nil {
 		switch {
 		case errors.Is(err, sql.ErrNoRows):
-			return nil, ErrTicketNotFound
+			return nil, entity.ErrTicketNotFound
 		default:
 			return nil, fmt.Errorf("failed to edit info: %w", err)
 		}

@@ -10,9 +10,6 @@ import (
 	"github.com/google/uuid"
 )
 
-var (
-	ErrDocumentNotFound = errors.New("document was not found")
-)
 
 func (repo *Repository) GetDocumentList(ctx context.Context, passengerID uuid.UUID) ([]entity.Document, error) {
 	ex := repo.CheckTx(ctx)
@@ -46,7 +43,7 @@ func (repo *Repository) EditDocumentInfo(
 	if err != nil {
 		switch {
 		case errors.Is(err, sql.ErrNoRows):
-			return nil, ErrDocumentNotFound
+			return nil, entity.ErrDocumentNotFound
 		default:
 			return nil, fmt.Errorf("failed to edit document: %w", err)
 		}
@@ -72,7 +69,7 @@ func (repo *Repository) RemoveDocumentInfo(ctx context.Context, documentID uuid.
 const (
 	GetDocumentListQuery = `
 	SELECT
-		type,
+		document_type,
 		id
 	FROM documents
 	WHERE
@@ -83,7 +80,7 @@ const (
 		UPDATE
 			documents
 		SET
-			type = $2
+			document_type = $2
 		WHERE
 			id = $1;
 	`

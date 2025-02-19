@@ -8,18 +8,13 @@ import (
 	"github.com/google/uuid"
 
 	"github.com/aspirin100/aviapi/internal/entity"
-	"github.com/aspirin100/aviapi/internal/repository"
-)
-
-var (
-	ErrTicketNotFound = errors.New("ticket was not found")
 )
 
 type TicketHandler interface {
 	GetTicketList(ctx context.Context) ([]entity.AirTicket, error)
 	EditTicket(ctx context.Context, order uuid.UUID, edited entity.AirTicket) (*entity.AirTicket, error)
 	RemoveTicketInfo(ctx context.Context, order uuid.UUID) error
-	BeginTx(ctx context.Context) (context.Context, repository.CommitOrRollback, error)
+	BeginTx(ctx context.Context) (context.Context, entity.CommitOrRollback, error)
 }
 
 type AirticketService struct {
@@ -74,8 +69,8 @@ func (as *AirticketService) EditTicket(
 	changedTicketInfo, err := as.ticketHandler.EditTicket(ctx, order, edited)
 	if err != nil {
 		switch {
-		case errors.Is(err, repository.ErrTicketNotFound):
-			return nil, ErrTicketNotFound
+		case errors.Is(err, entity.ErrTicketNotFound):
+			return nil, entity.ErrTicketNotFound
 		default:
 			return nil, fmt.Errorf("failed to edit ticket: %w", err)
 		}

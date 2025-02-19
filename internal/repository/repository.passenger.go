@@ -10,10 +10,6 @@ import (
 	"github.com/google/uuid"
 )
 
-var (
-	ErrPassengerNotFound = errors.New("passenger was not found")
-)
-
 func (repo *Repository) GetPassengerList(ctx context.Context, ticketOrderID uuid.UUID) ([]entity.Passenger, error) {
 	ex := repo.CheckTx(ctx)
 
@@ -48,7 +44,7 @@ func (repo *Repository) EditPassengerInfo(
 	if err != nil {
 		switch {
 		case errors.Is(err, sql.ErrNoRows):
-			return nil, ErrPassengerNotFound
+			return nil, entity.ErrPassengerNotFound
 		default:
 			return nil, fmt.Errorf("failed to edit passenger info: %w", err)
 		}

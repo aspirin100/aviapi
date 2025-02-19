@@ -73,7 +73,7 @@ func TestEditTicket(t *testing.T) {
 		},
 		{
 			Name:        "ticket not found case",
-			ExpectedErr: repository.ErrTicketNotFound,
+			ExpectedErr: entity.ErrTicketNotFound,
 			Args: Params{
 				orderID: uuid.Nil,
 				edited: entity.AirTicket{

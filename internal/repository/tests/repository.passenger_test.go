@@ -78,7 +78,7 @@ func TestEditPassengerInfo(t *testing.T) {
 		},
 		{
 			Name:        "passenger not found case",
-			ExpectedErr: repository.ErrPassengerNotFound,
+			ExpectedErr: entity.ErrPassengerNotFound,
 			Args: Params{
 				passengerID: uuid.Nil,
 				edited: entity.Passenger{
