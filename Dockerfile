@@ -9,8 +9,8 @@ RUN make build
 
 FROM alpine:3.20
 
-COPY --from=build /go/src/bin/finapi-server /usr/local/bin/finapi-server
+COPY --from=build /go/src/bin/aviapi-server /usr/local/bin/aviapi-server
 
-EXPOSE 8080
+EXPOSE 8000
 
-ENTRYPOINT ["finapi-server"]
+ENTRYPOINT ["aviapi-server"]

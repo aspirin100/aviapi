@@ -25,3 +25,10 @@ goose-down:
 
 lint:
 	go run github.com/golangci/golangci-lint/cmd/golangci-lint@latest run
+
+build:
+	mkdir -p bin && \
+	go build -o ./bin/aviapi-server ./cmd/aviapi/main.go
+
+build-img:
+	docker build -t aviapi-img .

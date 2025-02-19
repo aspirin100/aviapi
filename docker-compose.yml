@@ -11,6 +11,23 @@ services:
     networks:
       - aviapi-local
 
+  aviapi:
+    image: aviapi-img
+    restart: on-failure
+    depends_on:
+     - postgres
+    ports:
+     - "8000:8000"
+    environment:
+      AVIAPI_HOSTNAME: 0.0.0.0
+      AVIAPI_PORT: 8000
+      AVIAPI_DATABASE_DSN: postgres://postgres:postgres@postgres:5432/aviapi_db?sslmode=disable
+      AVIAPI_READ_TIMEOUT: 5s
+      AVIAPI_WRITE_TIMEOUT: 5s
+      AVIAPI_IDLE_TIMEOUT: 60s
+    networks:
+      - aviapi-local
+
 
 networks:
   aviapi-local:
