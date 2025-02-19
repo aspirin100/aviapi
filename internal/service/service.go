@@ -2,6 +2,7 @@ package service
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"time"
 
@@ -11,7 +12,7 @@ import (
 )
 
 type AirflightHandler interface {
-	GetFullInfo(ctx context.Context, ticketOrderID uuid.UUID) ([]entity.FullInfo, error)
+	GetFullInfo(ctx context.Context, ticketOrderID uuid.UUID) (*entity.FullInfo, error)
 	GetReport(passengerID uuid.UUID, periodStart, periodEnd time.Time) ([]entity.AirTicket, error)
 	BeginTx(ctx context.Context) (context.Context, entity.CommitOrRollback, error)
 }
@@ -26,9 +27,7 @@ func NewInfoService(airflightHandler AirflightHandler) *InfoService {
 	}
 }
 
-func (s *InfoService) GetFullInfo(
-	ctx context.Context,
-	ticketOrderID uuid.UUID) ([]entity.FullInfo, error) {
+func (s *InfoService) GetFullInfo(ctx context.Context, ticketOrderID uuid.UUID) (*entity.FullInfo, error) {
 	const op = "service.GetFullInfo"
 
 	ctx, commitOrRollback, err := s.airflightHandler.BeginTx(ctx)
@@ -43,12 +42,17 @@ func (s *InfoService) GetFullInfo(
 		}
 	}(err)
 
-	infoList, err := s.airflightHandler.GetFullInfo(ctx, ticketOrderID)
+	fullinfo, err := s.airflightHandler.GetFullInfo(ctx, ticketOrderID)
 	if err != nil {
-		return nil, fmt.Errorf("%s: %w", op, err)
+		switch {
+		case errors.Is(err, entity.ErrTicketNotFound):
+			return nil, entity.ErrTicketNotFound
+		default:
+			return nil, fmt.Errorf("%s: %w", op, err)
+		}
 	}
 
-	return infoList, nil
+	return fullinfo, nil
 }
 
 func (s *InfoService) GetReport(passengerID uuid.UUID, periodStart, periodEnd time.Time) ([]entity.AirTicket, error) {

@@ -36,18 +36,21 @@ type Document struct {
 	ID   uuid.UUID `db:"id" json:"id,omitempty"`
 }
 
+type PassengerWithDocuments struct {
+	PassengerID uuid.UUID  `db:"passenger_id" json:"passenger_id"`
+	FirstName   string     `db:"first_name" json:"first_name"`
+	LastName    string     `db:"last_name" json:"last_name"`
+	Patronymic  string     `db:"patronymic" json:"patronymic"`
+	Documents   []Document `db:"documents" json:"documents"`
+}
+
 type FullInfo struct {
-	From             string     `db:"from_country" json:"from"`
-	To               string     `db:"to_country" json:"to"`
-	Order            uuid.UUID  `db:"order_id" json:"order_id"`
-	Carrier          string     `db:"carrier" json:"carrier"`
-	DepartureDate    *time.Time `db:"departure_date" json:"departure_date"`
-	ArrivalDate      *time.Time `db:"arrival_date" json:"arrival_date"`
-	RegistrationDate *time.Time `db:"registration_date" json:"registration_date"`
-	FirstName        string     `db:"first_name" json:"first_name"`
-	LastName         string     `db:"last_name" json:"last_name"`
-	Patronymic       string     `db:"patronymic" json:"patronymic,omitempty"`
-	DocumentType     string     `db:"document_type" json:"document_type"`
-	DocumentID       uuid.UUID  `db:"document_id" json:"document_id,omitempty"`
-	PassengerID      uuid.UUID  `db:"passenger_id" json:"passenger_id"`
+	OrderID          uuid.UUID                `db:"order_id" json:"order_id"`
+	FromCountry      string                   `db:"from_country" json:"from_country"`
+	ToCountry        string                   `db:"to_country" json:"to_country"`
+	Carrier          string                   `db:"carrier" json:"carrier"`
+	DepartureDate    time.Time                `db:"departure_date" json:"departure_date"`
+	ArrivalDate      time.Time                `db:"arrival_date" json:"arrival_date"`
+	RegistrationDate time.Time                `db:"registration_date" json:"registration_date"`
+	Passengers       []PassengerWithDocuments `json:"passengers"`
 }

@@ -2,10 +2,12 @@ package handler
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"net/http"
 
 	"github.com/aspirin100/aviapi/internal/config"
+	"github.com/aspirin100/aviapi/internal/entity"
 	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
 )
@@ -77,14 +79,19 @@ func (h *Handler) GetFullInfo(ctx *gin.Context) {
 		return
 	}
 
-	infoList, err := h.airflightManager.GetFullInfo(ctx, parsedID)
+	fullinfo, err := h.airflightManager.GetFullInfo(ctx, parsedID)
 	if err != nil {
 		fmt.Println(err)
 
-		ctx.Status(http.StatusInternalServerError)
+		switch {
+		case errors.Is(err, entity.ErrTicketNotFound):
+			ctx.Status(http.StatusNotFound)
+		default:
+			ctx.Status(http.StatusInternalServerError)
+		}
 
 		return
 	}
 
-	ctx.JSON(http.StatusOK, infoList)
+	ctx.JSON(http.StatusOK, fullinfo)
 }

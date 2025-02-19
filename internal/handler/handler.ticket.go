@@ -7,7 +7,6 @@ import (
 	"net/http"
 
 	"github.com/aspirin100/aviapi/internal/entity"
-	"github.com/davecgh/go-spew/spew"
 	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
 )
@@ -30,8 +29,6 @@ func (h *Handler) EditTicketInfo(ctx *gin.Context) {
 
 		return
 	}
-
-	spew.Dump(editedTicket)
 
 	changedTicket, err := h.airflightManager.EditTicketInfo(
 		ctx,
