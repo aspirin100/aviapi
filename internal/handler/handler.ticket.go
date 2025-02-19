@@ -15,6 +15,7 @@ func (h *Handler) GetTicketList(ctx *gin.Context) {
 	tickets, err := h.airflightManager.GetTicketList(ctx)
 	if err != nil {
 		ctx.Status(http.StatusInternalServerError)
+
 		return
 	}
 
@@ -33,7 +34,7 @@ func (h *Handler) EditTicketInfo(ctx *gin.Context) {
 	changedTicket, err := h.airflightManager.EditTicketInfo(
 		ctx,
 		*orderID,
-		*editedTicket)
+		editedTicket)
 	if err != nil {
 		fmt.Println(err)
 
@@ -73,9 +74,9 @@ func (h *Handler) RemoveTicketInfo(ctx *gin.Context) {
 }
 
 func validateEditTicketRequest(ctx *gin.Context) (*uuid.UUID, *entity.AirTicket, error) {
-	order_id := ctx.Param("order_id")
+	orderID := ctx.Param("order_id")
 
-	parsedID, err := uuid.Parse(order_id)
+	parsedID, err := uuid.Parse(orderID)
 	if err != nil {
 		return nil, nil, fmt.Errorf("failed to parse order id: %w", err)
 	}

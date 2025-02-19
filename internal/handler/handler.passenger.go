@@ -87,9 +87,9 @@ func (h *Handler) RemovePassengerInfo(ctx *gin.Context) {
 }
 
 func validateEditPassengerRequest(ctx *gin.Context) (*uuid.UUID, *entity.Passenger, error) {
-	passenger_id := ctx.Param("passenger_id")
+	passengerID := ctx.Param("passenger_id")
 
-	parsedID, err := uuid.Parse(passenger_id)
+	parsedID, err := uuid.Parse(passengerID)
 	if err != nil {
 		return nil, nil, fmt.Errorf("failed to parse passenger id: %w", err)
 	}

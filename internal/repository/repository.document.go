@@ -54,10 +54,10 @@ func (repo *Repository) EditDocumentInfo(
 func (repo *Repository) RemoveDocumentInfo(ctx context.Context, documentID uuid.UUID) error {
 	ex := repo.CheckTx(ctx)
 
-	_, err := ex.QueryContext(
+	_, err := ex.QueryContext( //nolint:gocritic
 		ctx,
 		RemoveDocumentInfoQuery,
-		documentID)
+		documentID) 
 	if err != nil {
 		return fmt.Errorf("failed to remove document info: %w", err)
 	}

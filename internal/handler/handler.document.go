@@ -88,9 +88,9 @@ func (h *Handler) RemoveDocumentInfo(ctx *gin.Context) {
 }
 
 func validateEditDocumentRequest(ctx *gin.Context) (*uuid.UUID, *entity.Document, error) {
-	document_id := ctx.Param("document_id")
+	documentID := ctx.Param("document_id")
 
-	parsedID, err := uuid.Parse(document_id)
+	parsedID, err := uuid.Parse(documentID)
 	if err != nil {
 		return nil, nil, fmt.Errorf("failed to parse document id: %w", err)
 	}

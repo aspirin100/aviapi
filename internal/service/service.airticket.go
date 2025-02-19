@@ -12,7 +12,7 @@ import (
 
 type TicketHandler interface {
 	GetTicketList(ctx context.Context) ([]entity.AirTicket, error)
-	EditTicketInfo(ctx context.Context, order uuid.UUID, edited entity.AirTicket) (*entity.AirTicket, error)
+	EditTicketInfo(ctx context.Context, order uuid.UUID, edited *entity.AirTicket) (*entity.AirTicket, error)
 	RemoveTicketInfo(ctx context.Context, order uuid.UUID) error
 	BeginTx(ctx context.Context) (context.Context, entity.CommitOrRollback, error)
 }
@@ -53,7 +53,7 @@ func (as *AirticketService) GetTicketList(ctx context.Context) ([]entity.AirTick
 func (as *AirticketService) EditTicketInfo(
 	ctx context.Context,
 	order uuid.UUID,
-	edited entity.AirTicket) (*entity.AirTicket, error) {
+	edited *entity.AirTicket) (*entity.AirTicket, error) {
 	ctx, commitOrRollback, err := as.ticketHandler.BeginTx(ctx)
 	if err != nil {
 		return nil, fmt.Errorf("failed to start transaction: %w", err)

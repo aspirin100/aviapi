@@ -51,13 +51,13 @@ func (repo *Repository) EditPassengerInfo(
 	}
 
 	return &changedPassengerInfo, nil
-
 }
 
 func (repo *Repository) RemovePassengerInfo(ctx context.Context, passengerID uuid.UUID) error {
 	ex := repo.CheckTx(ctx)
 
-	_, err := ex.QueryContext(
+	//nolint:gocritic
+	_, err := ex.QueryContext( 
 		ctx,
 		RemovePassengerInfoQuery,
 		passengerID)

@@ -25,8 +25,8 @@ type executor interface {
 	GetContext(ctx context.Context, dest interface{}, query string, args ...interface{}) error
 }
 
-func NewConnection(driverName, DSN string) (*Repository, error) {
-	db, err := sqlx.Connect(driverName, DSN)
+func NewConnection(driverName, dsn string) (*Repository, error) {
+	db, err := sqlx.Connect(driverName, dsn)
 	if err != nil {
 		return nil, fmt.Errorf("failed to connect to database: %w", err)
 	}
@@ -40,8 +40,8 @@ type ctxKey struct{}
 
 var txContextKey = ctxKey{}
 
-func (r *Repository) BeginTx(ctx context.Context) (context.Context, entity.CommitOrRollback, error) {
-	tx, err := r.DB.BeginTxx(ctx, &sql.TxOptions{
+func (repo *Repository) BeginTx(ctx context.Context) (context.Context, entity.CommitOrRollback, error) {
+	tx, err := repo.DB.BeginTxx(ctx, &sql.TxOptions{
 		Isolation: sql.LevelReadCommitted,
 	})
 	if err != nil {
@@ -67,8 +67,8 @@ func (r *Repository) BeginTx(ctx context.Context) (context.Context, entity.Commi
 	}, nil
 }
 
-func (r *Repository) CheckTx(ctx context.Context) executor {
-	var ex executor = r.DB
+func (repo *Repository) CheckTx(ctx context.Context) executor {
+	var ex executor = repo.DB
 
 	// checks if current operation is in transaction
 	tx, ok := ctx.Value(txContextKey).(sqlx.Tx)
@@ -121,20 +121,23 @@ func (repo *Repository) GetFullInfo(ctx context.Context, ticketOrderID uuid.UUID
 		Passengers:       []entity.PassengerWithDocuments{},
 	}
 
-	for _, row := range rows {
+	for i := range rows {
 		var docs []entity.Document
 
-		if len(row.Documents) > 0 {
-			json.Unmarshal(row.Documents, &docs)
+		if len(rows[i].Documents) > 0 {
+			err = json.Unmarshal(rows[i].Documents, &docs)
+			if err != nil {
+				return nil, fmt.Errorf("failed to get passenger's document list: %w", err)
+			}
 		}
 
 		info.Passengers = append(
 			info.Passengers,
 			entity.PassengerWithDocuments{
-				PassengerID: row.PassengerID,
-				FirstName:   row.FirstName,
-				LastName:    row.LastName,
-				Patronymic:  row.Patronymic,
+				PassengerID: rows[i].PassengerID,
+				FirstName:   rows[i].FirstName,
+				LastName:    rows[i].LastName,
+				Patronymic:  rows[i].Patronymic,
 				Documents:   docs,
 			})
 	}

@@ -8,11 +8,11 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/aspirin100/aviapi/internal/config"
-	"github.com/aspirin100/aviapi/internal/entity"
-	"github.com/davecgh/go-spew/spew"
 	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
+
+	"github.com/aspirin100/aviapi/internal/config"
+	"github.com/aspirin100/aviapi/internal/entity"
 )
 
 type Handler struct {
@@ -55,7 +55,7 @@ func New(airflightManager AirflightManager, cfg *config.Config) *Handler {
 
 func (h *Handler) Start() error {
 	err := h.server.ListenAndServe()
-	if err != http.ErrServerClosed {
+	if !errors.Is(err, http.ErrServerClosed) {
 		return fmt.Errorf("failed to start http server: %w", err)
 	}
 
@@ -72,9 +72,9 @@ func (h *Handler) Shutdown(ctx context.Context) error {
 }
 
 func (h *Handler) GetFullInfo(ctx *gin.Context) {
-	order_id := ctx.Param("order_id")
+	orderID := ctx.Param("order_id")
 
-	parsedID, err := uuid.Parse(order_id)
+	parsedID, err := uuid.Parse(orderID)
 	if err != nil {
 		fmt.Println(err)
 
@@ -115,8 +115,6 @@ func (h *Handler) GetReport(ctx *gin.Context) {
 
 		return
 	}
-
-	spew.Dump(args)
 
 	report, err := h.airflightManager.GetReport(
 		ctx,

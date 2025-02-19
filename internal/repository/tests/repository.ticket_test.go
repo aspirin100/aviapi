@@ -16,7 +16,7 @@ const (
 	PostgresDSN = "postgres://postgres:postgres@localhost:5432/aviapi_db?sslmode=disable"
 )
 
-// only for test, changes with every migration
+// only for test, changes with every migration.
 var (
 	TicketIDs = []uuid.UUID{
 		uuid.MustParse("657bdd55-4045-499c-af5a-a2d749114cf7"),
@@ -85,7 +85,9 @@ func TestEditTicketInfo(t *testing.T) {
 
 	for _, tcase := range cases {
 		t.Run(tcase.Name, func(t *testing.T) {
-			_, err := repo.EditTicketInfo(context.Background(), tcase.Args.orderID, tcase.Args.edited)
+			_, err := repo.EditTicketInfo(context.Background(),
+				tcase.Args.orderID,
+				&tcase.Args.edited)
 
 			require.EqualValues(t, tcase.ExpectedErr, err)
 		})

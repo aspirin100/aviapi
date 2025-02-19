@@ -27,7 +27,7 @@ func (repo *Repository) GetTicketList(ctx context.Context) ([]entity.AirTicket, 
 func (repo *Repository) EditTicketInfo(
 	ctx context.Context,
 	order uuid.UUID,
-	edited entity.AirTicket) (*entity.AirTicket, error) {
+	edited *entity.AirTicket) (*entity.AirTicket, error) {
 	ex := repo.CheckTx(ctx)
 
 	var changedTicket entity.AirTicket
@@ -56,6 +56,7 @@ func (repo *Repository) EditTicketInfo(
 func (repo *Repository) RemoveTicketInfo(ctx context.Context, order uuid.UUID) error {
 	ex := repo.CheckTx(ctx)
 
+	//nolint:gocritic
 	_, err := ex.QueryContext(
 		ctx,
 		RemoveTicketInfoQuery,

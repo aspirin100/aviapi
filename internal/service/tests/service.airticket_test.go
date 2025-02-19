@@ -41,7 +41,7 @@ func TestEditTicketInfoInfo(t *testing.T) {
 	}
 
 	type Params struct {
-		orderId uuid.UUID
+		orderID uuid.UUID
 		edited  entity.AirTicket
 	}
 
@@ -54,7 +54,7 @@ func TestEditTicketInfoInfo(t *testing.T) {
 			Name:        "ok case",
 			ExpectedErr: nil,
 			Args: Params{
-				orderId: uids[0],
+				orderID: uids[0],
 				edited: entity.AirTicket{
 					From: "Edited deportation country",
 				},
@@ -64,7 +64,7 @@ func TestEditTicketInfoInfo(t *testing.T) {
 			Name:        "not found case",
 			ExpectedErr: entity.ErrTicketNotFound,
 			Args: Params{
-				orderId: uuid.Nil,
+				orderID: uuid.Nil,
 				edited: entity.AirTicket{
 					From: "Edited deportation country",
 				},
@@ -76,8 +76,8 @@ func TestEditTicketInfoInfo(t *testing.T) {
 		t.Run(tcase.Name, func(t *testing.T) {
 			_, err := srv.EditTicketInfo(
 				context.Background(),
-				tcase.Args.orderId,
-				tcase.Args.edited)
+				tcase.Args.orderID,
+				&tcase.Args.edited)
 
 			require.EqualValues(t, tcase.ExpectedErr, err)
 		})
