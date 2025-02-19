@@ -23,6 +23,7 @@ func New(airflightManager AirflightManager, cfg *config.Config) *Handler {
 
 	_ = router.GET("/airticket", serverHandler.GetTicketList)
 	_ = router.PATCH("/airticket/:order_id", serverHandler.EditTicketInfo)
+	_ = router.DELETE("/airticket/:order_id", serverHandler.RemoveTicketInfo)
 
 	serverHandler.server = &http.Server{
 		Addr:         cfg.Hostname + ":" + cfg.Port,
