@@ -6,6 +6,7 @@ import (
 	"testing"
 
 	"github.com/aspirin100/aviapi/internal/repository"
+	"github.com/google/uuid"
 )
 
 func TestGetFullInfo(t *testing.T) {
@@ -15,7 +16,7 @@ func TestGetFullInfo(t *testing.T) {
 		t.Fail()
 	}
 
-	infoList, err := repo.GetFullInfo(context.Background(), TicketIDs[0])
+	infoList, err := repo.GetFullInfo(context.Background(), uuid.Nil)
 	if err != nil {
 		fmt.Println(err)
 		t.Fail()

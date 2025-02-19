@@ -47,7 +47,7 @@ type FullInfo struct {
 	FirstName        string     `db:"first_name" json:"first_name"`
 	LastName         string     `db:"last_name" json:"last_name"`
 	Patronymic       string     `db:"patronymic" json:"patronymic,omitempty"`
-	DocumentType     string     `db:"document_type" json:"type"`
+	DocumentType     string     `db:"document_type" json:"document_type"`
 	DocumentID       uuid.UUID  `db:"document_id" json:"document_id,omitempty"`
 	PassengerID      uuid.UUID  `db:"passenger_id" json:"passenger_id"`
 }

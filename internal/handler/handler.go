@@ -7,6 +7,7 @@ import (
 
 	"github.com/aspirin100/aviapi/internal/config"
 	"github.com/gin-gonic/gin"
+	"github.com/google/uuid"
 )
 
 type Handler struct {
@@ -32,6 +33,8 @@ func New(airflightManager AirflightManager, cfg *config.Config) *Handler {
 	_ = router.GET("/airticket/:order_id/passengers", serverHandler.GetPassengerList)
 	_ = router.PATCH("/passengers/:passenger_id", serverHandler.EditPassengerInfo)
 	_ = router.DELETE("/passengers/:passenger_id", serverHandler.RemovePassengerInfo)
+
+	_ = router.GET("airticket/:order_id/info", serverHandler.GetFullInfo)
 
 	serverHandler.server = &http.Server{
 		Addr:         cfg.Hostname + ":" + cfg.Port,
@@ -60,4 +63,28 @@ func (h *Handler) Shutdown(ctx context.Context) error {
 	}
 
 	return nil
+}
+
+func (h *Handler) GetFullInfo(ctx *gin.Context) {
+	order_id := ctx.Param("order_id")
+
+	parsedID, err := uuid.Parse(order_id)
+	if err != nil {
+		fmt.Println(err)
+
+		ctx.Status(http.StatusBadRequest)
+
+		return
+	}
+
+	infoList, err := h.airflightManager.GetFullInfo(ctx, parsedID)
+	if err != nil {
+		fmt.Println(err)
+
+		ctx.Status(http.StatusInternalServerError)
+
+		return
+	}
+
+	ctx.JSON(http.StatusOK, infoList)
 }
