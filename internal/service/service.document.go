@@ -18,7 +18,7 @@ type DocumentService struct {
 	documentHandler DocumentHandler
 }
 
-func New(documentHandler DocumentHandler) *DocumentService {
+func NewDocumentService(documentHandler DocumentHandler) *DocumentService {
 	return &DocumentService{
 		documentHandler: documentHandler,
 	}

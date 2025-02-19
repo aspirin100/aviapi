@@ -3,8 +3,9 @@ package service
 import (
 	"context"
 
-	"github.com/aspirin100/aviapi/internal/entity"
 	"github.com/google/uuid"
+
+	"github.com/aspirin100/aviapi/internal/entity"
 )
 
 type PassengerHandler interface {
@@ -17,7 +18,7 @@ type PassengerService struct {
 	passengerHandler PassengerHandler
 }
 
-func New(passengerHandler PassengerHandler) *PassengerService {
+func NewPassengerService(passengerHandler PassengerHandler) *PassengerService {
 	return &PassengerService{
 		passengerHandler: passengerHandler,
 	}

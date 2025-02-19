@@ -1,32 +1,35 @@
 package service
 
 import (
+	"context"
 	"time"
 
 	"github.com/google/uuid"
 
 	"github.com/aspirin100/aviapi/internal/entity"
+	"github.com/aspirin100/aviapi/internal/repository"
 )
 
 type AirflightHandler interface {
 	GetFullInfo(ticketOrderID uuid.UUID) (*entity.FullInfo, error)
 	GetReport(passengerID uuid.UUID, periodStart, periodEnd time.Time) ([]entity.AirTicket, error)
+	BeginTx(ctx context.Context) (context.Context, repository.CommitOrRollback, error)
 }
 
-type Service struct {
+type InfoService struct {
 	airflightHandler AirflightHandler
 }
 
-func New(airflightHandler AirflightHandler) *Service {
-	return &Service{
+func NewInfoService(airflightHandler AirflightHandler) *InfoService {
+	return &InfoService{
 		airflightHandler: airflightHandler,
 	}
 }
 
-func (s *Service) GetFullInfo(ticketOrderID uuid.UUID) (*entity.FullInfo, error) {
+func (s *InfoService) GetFullInfo(ticketOrderID uuid.UUID) (*entity.FullInfo, error) {
 	return nil, nil
 }
 
-func (s *Service) GetReport(passengerID uuid.UUID, periodStart, periodEnd time.Time) ([]entity.AirTicket, error) {
+func (s *InfoService) GetReport(passengerID uuid.UUID, periodStart, periodEnd time.Time) ([]entity.AirTicket, error) {
 	return nil, nil
 }

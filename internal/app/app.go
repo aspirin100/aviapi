@@ -6,12 +6,9 @@ import (
 	"log"
 
 	"github.com/aspirin100/aviapi/internal/config"
-	ticketservice "github.com/aspirin100/aviapi/internal/entity/airticket/service"
-	docservice "github.com/aspirin100/aviapi/internal/entity/document/service"
-	passervice "github.com/aspirin100/aviapi/internal/entity/passenger/service"
 	"github.com/aspirin100/aviapi/internal/handler"
 	"github.com/aspirin100/aviapi/internal/repository"
-	infoservice "github.com/aspirin100/aviapi/internal/service"
+	"github.com/aspirin100/aviapi/internal/service"
 )
 
 const (
@@ -19,10 +16,10 @@ const (
 )
 
 type manager struct {
-	*docservice.DocumentService
-	*ticketservice.AirticketService
-	*passervice.PassengerService
-	*infoservice.Service
+	*service.DocumentService
+	*service.AirticketService
+	*service.PassengerService
+	*service.InfoService
 }
 
 type App struct {
@@ -75,9 +72,9 @@ func (app *App) Stop(ctx context.Context) error {
 
 func initManager(repo *repository.Repository) *manager {
 	return &manager{
-		docservice.New(repo),
-		ticketservice.New(repo),
-		passervice.New(repo),
-		infoservice.New(repo),
+		service.NewDocumentService(repo),
+		service.NewAirticketService(repo),
+		service.NewPassengerService(repo),
+		service.NewInfoService(repo),
 	}
 }
