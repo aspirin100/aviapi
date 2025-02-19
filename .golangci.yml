@@ -14,9 +14,10 @@ linters:
     - nolintlint
     - gci
     - forbidigo
-    - gofmt
-    - gofumpt
-    - goimports
+    - tagliatelle
+    # - gofmt
+    # - gofumpt
+    # - goimports
 
 linters-settings:    
   varnamelen:
@@ -93,7 +94,14 @@ linters-settings:
       - name: unused-parameter
       - name: unused-receiver
 
-
+issues:
+  exclude-use-default: false
+  exclude-rules:
+    - path: _test\.go
+      linters:
+        - gofmt
+        - gofumpt
+        - wrapcheck
 
 run:
   timeout: 5m

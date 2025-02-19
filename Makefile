@@ -22,3 +22,6 @@ goose-up:
 goose-down:
 	go run github.com/pressly/goose/v3/cmd/goose@latest \
 	-dir ./internal/repository/migrations postgres $(POSTGRES_DSN) down
+
+lint:
+	go run github.com/golangci/golangci-lint/cmd/golangci-lint@latest run
