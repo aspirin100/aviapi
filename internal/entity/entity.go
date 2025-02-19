@@ -32,7 +32,7 @@ type Passenger struct {
 }
 
 type Document struct {
-	Type string    `db:"document_type" json:"type,omitempty"`
+	Type string    `db:"document_type" json:"type"`
 	ID   uuid.UUID `db:"id" json:"id,omitempty"`
 }
 

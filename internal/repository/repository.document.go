@@ -10,7 +10,6 @@ import (
 	"github.com/google/uuid"
 )
 
-
 func (repo *Repository) GetDocumentList(ctx context.Context, passengerID uuid.UUID) ([]entity.Document, error) {
 	ex := repo.CheckTx(ctx)
 
@@ -30,14 +29,14 @@ func (repo *Repository) GetDocumentList(ctx context.Context, passengerID uuid.UU
 
 func (repo *Repository) EditDocumentInfo(
 	ctx context.Context,
-	passengerID uuid.UUID,
+	documentID uuid.UUID,
 	edited entity.Document) (*entity.Document, error) {
 	ex := repo.CheckTx(ctx)
 
 	var changedDocument entity.Document
 
 	err := ex.GetContext(ctx, &changedDocument, EditDocumentInfoQuery,
-		passengerID,
+		documentID,
 		edited.Type,
 	)
 	if err != nil {
@@ -80,9 +79,12 @@ const (
 		UPDATE
 			documents
 		SET
-			document_type = $2
+			document_type = CASE WHEN $2 = '' THEN document_type ELSE $2 END
 		WHERE
-			id = $1;
+			id = $1
+		RETURNING
+			id,
+			document_type;
 	`
 
 	RemoveDocumentInfoQuery = `
