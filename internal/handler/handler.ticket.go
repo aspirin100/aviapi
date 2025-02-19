@@ -23,7 +23,7 @@ func (h *Handler) GetTicketList(ctx *gin.Context) {
 }
 
 func (h *Handler) EditTicketInfo(ctx *gin.Context) {
-	orderID, editedTicket, err := validateEditRequest(ctx)
+	orderID, editedTicket, err := validateEditTicketRequest(ctx)
 	if err != nil {
 		fmt.Println(err)
 		ctx.Status(http.StatusBadRequest)
@@ -54,7 +54,7 @@ func (h *Handler) EditTicketInfo(ctx *gin.Context) {
 }
 
 func (h *Handler) RemoveTicketInfo(ctx *gin.Context) {
-	parsedID, err := parseOrderID(ctx)
+	parsedID, err := uuid.Parse(ctx.Param("order_id"))
 	if err != nil {
 		fmt.Println(err)
 
@@ -63,7 +63,7 @@ func (h *Handler) RemoveTicketInfo(ctx *gin.Context) {
 		return
 	}
 
-	err = h.airflightManager.RemoveTicketInfo(ctx, *parsedID)
+	err = h.airflightManager.RemoveTicketInfo(ctx, parsedID)
 	if err != nil {
 		fmt.Println(err)
 
@@ -75,10 +75,12 @@ func (h *Handler) RemoveTicketInfo(ctx *gin.Context) {
 	ctx.Status(http.StatusOK)
 }
 
-func validateEditRequest(ctx *gin.Context) (*uuid.UUID, *entity.AirTicket, error) {
-	parsedID, err := parseOrderID(ctx)
+func validateEditTicketRequest(ctx *gin.Context) (*uuid.UUID, *entity.AirTicket, error) {
+	order_id := ctx.Param("order_id")
+
+	parsedID, err := uuid.Parse(order_id)
 	if err != nil {
-		return nil, nil, fmt.Errorf("id parsing error: %w", err)
+		return nil, nil, fmt.Errorf("failed to parse order_id: %w", err)
 	}
 
 	var editedTicket entity.AirTicket
@@ -90,16 +92,5 @@ func validateEditRequest(ctx *gin.Context) (*uuid.UUID, *entity.AirTicket, error
 		return nil, nil, fmt.Errorf("failed to decode request body: %w", err)
 	}
 
-	return parsedID, &editedTicket, nil
-}
-
-func parseOrderID(ctx *gin.Context) (*uuid.UUID, error) {
-	order_id := ctx.Param("order_id")
-
-	parsedOrderID, err := uuid.Parse(order_id)
-	if err != nil {
-		return nil, fmt.Errorf("failed to parse order_id: %w", err)
-	}
-
-	return &parsedOrderID, nil
+	return &parsedID, &editedTicket, nil
 }
