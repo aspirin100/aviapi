@@ -34,7 +34,7 @@ func TestGetPassengerList(t *testing.T) {
 		{
 			Name:        "ok case",
 			ExpectedErr: nil,
-			OrderID:     ticketIDs[2],
+			OrderID:     TicketIDs[2],
 		},
 	}
 

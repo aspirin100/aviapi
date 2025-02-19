@@ -78,8 +78,23 @@ func (r *Repository) CheckTx(ctx context.Context) executor {
 	return ex
 }
 
-func (repo *Repository) GetFullInfo(ticketOrderID uuid.UUID) (*entity.FullInfo, error) {
-	return nil, nil
+func (repo *Repository) GetFullInfo(
+	ctx context.Context,
+	ticketOrderID uuid.UUID) ([]entity.FullInfo, error) {
+	ex := repo.CheckTx(ctx)
+
+	info := []entity.FullInfo{}
+
+	err := ex.SelectContext(
+		ctx,
+		&info,
+		GetFullInfoQuery,
+		ticketOrderID)
+	if err != nil {
+		return nil, fmt.Errorf("failed to read all info: %w", err)
+	}
+
+	return info, nil
 }
 
 func (repo *Repository) GetReport(
@@ -87,3 +102,27 @@ func (repo *Repository) GetReport(
 	periodStart, periodEnd time.Time) ([]entity.AirTicket, error) {
 	return nil, nil
 }
+
+const (
+	GetFullInfoQuery = `
+	SELECT
+		t.order_id,
+		t.from_country,
+		t.to_country,
+		t.carrier,
+		t.departure_date,
+		t.arrival_date,
+		t.registration_date,
+		p.first_name,
+		p.last_name,
+		COALESCE(p.patronymic, '') AS patronymic,
+		d.id AS document_id,
+		d.document_type,
+		d.passenger_id
+	FROM tickets t
+	LEFT JOIN ticket_passengers tp ON t.order_id = tp.order_id
+	LEFT JOIN passengers p ON tp.passenger_id = p.id
+	LEFT JOIN documents d ON p.id = d.passenger_id
+	WHERE t.order_id = $1;
+	`
+)

@@ -18,10 +18,9 @@ const (
 
 // only for test, changes with every migration
 var (
-	ticketIDs = []uuid.UUID{
-		uuid.MustParse("2eda32fd-0c41-4654-bb2e-5d45760e02a8"),
-		uuid.MustParse("62973252-1ad9-447e-ac7a-39a8daada566"),
-		uuid.MustParse("ac2057bc-8fdc-47ae-af72-fb36c65f7abf"),
+	TicketIDs = []uuid.UUID{
+		uuid.MustParse("657bdd55-4045-499c-af5a-a2d749114cf7"),
+		uuid.MustParse("199664ae-4370-45e8-b399-b3aadf7ac5df"),
 	}
 )
 
@@ -64,7 +63,7 @@ func TestEditTicketInfo(t *testing.T) {
 			Name:        "partitial edit",
 			ExpectedErr: nil,
 			Args: Params{
-				orderID: ticketIDs[1],
+				orderID: TicketIDs[1],
 				edited: entity.AirTicket{
 					From: "EDITED",
 					To:   "EDITED",
@@ -108,7 +107,7 @@ func TestRemoveTicketInfo(t *testing.T) {
 		{
 			Name:        "ok case",
 			ExpectedErr: nil,
-			OrderID:     ticketIDs[0],
+			OrderID:     TicketIDs[0],
 		},
 		{
 			Name:        "ticket not found case",

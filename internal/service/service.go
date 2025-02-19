@@ -10,7 +10,7 @@ import (
 )
 
 type AirflightHandler interface {
-	GetFullInfo(ticketOrderID uuid.UUID) (*entity.FullInfo, error)
+	GetFullInfo(ctx context.Context, ticketOrderID uuid.UUID) ([]entity.FullInfo, error)
 	GetReport(passengerID uuid.UUID, periodStart, periodEnd time.Time) ([]entity.AirTicket, error)
 	BeginTx(ctx context.Context) (context.Context, entity.CommitOrRollback, error)
 }
@@ -25,7 +25,7 @@ func NewInfoService(airflightHandler AirflightHandler) *InfoService {
 	}
 }
 
-func (s *InfoService) GetFullInfo(ticketOrderID uuid.UUID) (*entity.FullInfo, error) {
+func (s *InfoService) GetFullInfo(ctx context.Context, ticketOrderID uuid.UUID) ([]entity.FullInfo, error) {
 	return nil, nil
 }
 
