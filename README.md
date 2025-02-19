@@ -13,7 +13,7 @@ make up
 make goose-up # Для поднятия миграций
 ```
 
-Дополнительно:
+Additionally:
 ```shell
 make goose-down # Для отката последней миграции
 
