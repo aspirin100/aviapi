@@ -95,3 +95,4 @@ func (h *Handler) GetFullInfo(ctx *gin.Context) {
 
 	ctx.JSON(http.StatusOK, fullinfo)
 }
+

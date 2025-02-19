@@ -142,37 +142,74 @@ func (repo *Repository) GetFullInfo(ctx context.Context, ticketOrderID uuid.UUID
 	return &info, nil
 }
 
-func (repo *Repository) GetReport(
+func (repo *Repository) GetReport(ctx context.Context,
 	passengerID uuid.UUID,
-	periodStart, periodEnd time.Time) ([]entity.AirTicket, error) {
-	return nil, nil
+	periodStart, periodEnd time.Time) ([]entity.Report, error) {
+	ex := repo.CheckTx(ctx)
+
+	report := []entity.Report{}
+
+	err := ex.SelectContext(ctx, &report, GetReportQuery,
+		periodStart,
+		periodEnd,
+		passengerID)
+	if err != nil {
+		return nil, fmt.Errorf("failed to get report: %w", err)
+	}
+
+	return report, nil
 }
 
 const (
 	GetFullInfoQuery = `
-	    SELECT
-            t.order_id,
-            t.from_country,
-            t.to_country,
-            t.carrier,
-            t.departure_date,
-            t.arrival_date,
-            t.registration_date,
-            p.id AS passenger_id,
-            p.first_name,
-            p.last_name,
-            COALESCE(p.patronymic, '') AS patronymic,
-            JSON_AGG(
-                JSON_BUILD_OBJECT(
-                    'id', d.id,
-                    'document_type', d.document_type
-                )
-            ) FILTER (WHERE d.id IS NOT NULL) AS documents
-        FROM tickets t
-        LEFT JOIN ticket_passengers tp ON t.order_id = tp.order_id
-        LEFT JOIN passengers p ON tp.passenger_id = p.id
-        LEFT JOIN documents d ON p.id = d.passenger_id
-        WHERE t.order_id = $1
-        GROUP BY t.order_id, p.id
+	SELECT
+		t.order_id,
+		t.from_country,
+		t.to_country,
+		t.carrier,
+		t.departure_date,
+		t.arrival_date,
+		t.registration_date,
+		p.id AS passenger_id,
+		p.first_name,
+		p.last_name,
+		COALESCE(p.patronymic, '') AS patronymic,
+		JSON_AGG(
+			JSON_BUILD_OBJECT(
+				'id', d.id,
+				'document_type', d.document_type
+			)
+		) FILTER (WHERE d.id IS NOT NULL) AS documents
+	FROM tickets t
+	LEFT JOIN ticket_passengers tp ON t.order_id = tp.order_id
+	LEFT JOIN passengers p ON tp.passenger_id = p.id
+	LEFT JOIN documents d ON p.id = d.passenger_id
+	WHERE t.order_id = $1
+	GROUP BY t.order_id, p.id
 		`
+	GetReportQuery = `
+	SELECT
+		t.registration_date,
+		t.departure_date,
+		t.order_id,
+		t.from_country,
+		t.to_country,
+		CASE
+			WHEN t.departure_date <= $2 THEN TRUE
+			ELSE FALSE
+		END AS service_provided
+	FROM tickets t
+	LEFT JOIN ticket_passengers tp ON t.order_id = tp.order_id
+	LEFT JOIN passengers p ON tp.passenger_id = p.id
+	WHERE
+		p.id = $3
+		AND (
+			(t.registration_date < $1 AND t.departure_date >= $1 AND t.departure_date <= $2)
+			OR
+			(t.registration_date >= $1 AND t.registration_date <= $2 AND (t.departure_date > $2 OR t.departure_date IS NULL))
+			OR
+			(t.registration_date >= $1 AND t.registration_date <= $2 AND t.departure_date >= $1 AND t.departure_date <= $2)
+		)
+	ORDER BY t.registration_date;
+	`
 )

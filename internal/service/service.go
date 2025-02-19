@@ -13,7 +13,9 @@ import (
 
 type AirflightHandler interface {
 	GetFullInfo(ctx context.Context, ticketOrderID uuid.UUID) (*entity.FullInfo, error)
-	GetReport(passengerID uuid.UUID, periodStart, periodEnd time.Time) ([]entity.AirTicket, error)
+	GetReport(ctx context.Context,
+		passengerID uuid.UUID,
+		periodStart, periodEnd time.Time) ([]entity.Report, error)
 	BeginTx(ctx context.Context) (context.Context, entity.CommitOrRollback, error)
 }
 
@@ -55,6 +57,32 @@ func (s *InfoService) GetFullInfo(ctx context.Context, ticketOrderID uuid.UUID) 
 	return fullinfo, nil
 }
 
-func (s *InfoService) GetReport(passengerID uuid.UUID, periodStart, periodEnd time.Time) ([]entity.AirTicket, error) {
-	return nil, nil
+func (s *InfoService) GetReport(ctx context.Context,
+	passengerID uuid.UUID,
+	periodStart,
+	periodEnd time.Time) ([]entity.Report, error) {
+	const op = "service.GetReport"
+
+	ctx, commitOrRollback, err := s.airflightHandler.BeginTx(ctx)
+	if err != nil {
+		return nil, fmt.Errorf("failed to start transaction: %w", err)
+	}
+
+	defer func(err error) {
+		errTx := commitOrRollback(err)
+		if errTx != nil {
+			fmt.Printf("commit/rollback error: %v", errTx)
+		}
+	}(err)
+
+	report, err := s.airflightHandler.GetReport(
+		ctx,
+		passengerID,
+		periodStart,
+		periodEnd)
+	if err != nil {
+		return nil, fmt.Errorf("%s: %w", op, err)
+	}
+
+	return report, nil
 }
